@@ -9,27 +9,28 @@ d3.json(queryUrl, function(data) {
 
 // Define a markerSize function that will give each city a different radius based on its population
 function markerSize(magnitude) {
-    return magnitude * 10;
+    return magnitude * 5;
+};
+
+// Create a function to define magnitude colors
+function color(magnitude) {
+    if (magnitude > 5) {
+        return 'red'
+    } else if (magnitude > 4) {
+        return 'orange'
+    } else if (magnitude > 3) {
+        return 'yellow'
+    } else if (magnitude > 2) {
+        return 'blue'
+    } else if (magnitude > 1) {
+        return 'green'
+    } else {
+        return 'white'
+    }
 };
 
 function createFeatures(earthquakeData) {
 
-    // // Define arrays to hold the magnitude markers
-    // var magMarkers = [];
-
-    // // Loop through locations and create city and state markers
-    // for (var i = 0; i < earthquakeData.length; i++) {
-    // // Setting the marker radius 
-    //     magMarkers.push(
-    //     L.circle(earthquakeData.properties.mag, {
-    //         stroke: false,
-    //         fillOpacity: 0.75,
-    //         color: "white",
-    //         fillColor: "white",
-    //         radius: markerSize(earthquakeData.properties.mag)
-    //     })
-    // );
-    
     // Define a function we want to run once for each feature in the features array
     // Give each feature a popup describing the place and time of the earthquake
     function onEachFeature(feature, layer) {
@@ -39,7 +40,18 @@ function createFeatures(earthquakeData) {
     // Create a GeoJSON layer containing the features array on the earthquakeData object
     // Run the onEachFeature function once for each piece of data in the array
     var earthquakes = L.geoJSON(earthquakeData, {
-        onEachFeature: onEachFeature
+        onEachFeature: onEachFeature,
+        pointToLayer: function (geoJPoint, latlng) {
+            return L.circleMarker(latlng, {radius: markerSize(geoJPoint.properties.mag)});
+        },
+        style: function(geoJFeature) {
+            return {
+                fillColor: color(geoJFeature.properties.mag),
+                fillOpacity: 0.7,
+                weight: 0.1,
+                color: 'black'
+            }
+        }
     });
 
     // Sending our earthquakes layer to the createMap function
@@ -90,4 +102,34 @@ function createMap(earthquakes) {
         zoom: 5,
         layers: [graymap, earthquakes]
     });
+
+    // Create a layer control
+    // Pass in our baseMaps and overlayMaps
+    // Add the layer control to the map
+    L.control.layers(baseMaps, overlayMaps, {
+        collapsed: false
+    }).addTo(myMap);
+
+
+    // Create legend
+    var legend = L.control({ position: 'bottomright' });
+
+    legend.onAdd = function (map) {
+
+        var div = L.DomUtil.create('div', 'info legend'),
+            magnitude = [0, 1, 2, 3, 4, 5],
+            labels = [];
+
+        div.innerHTML += "<h4 style='margin:5px'>Magnitude</h4><hr>"
+
+        for (var i = 0; i < magnitude.length; i++) {
+            div.innerHTML +=
+                '<i style="background: ' + color(magnitude[i + 1]) + '"></i> ' +
+                magnitude[i] + (magnitude[i + 1] ? '&ndash;' + magnitude[i + 1] + '<br>' : '+');
+        }
+
+        return div;
+    };
+    legend.addTo(myMap);
+
 };
