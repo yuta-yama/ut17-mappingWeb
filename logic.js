@@ -20,14 +20,14 @@ function createFeatures(earthquakeData) {
     // // Loop through locations and create city and state markers
     // for (var i = 0; i < earthquakeData.length; i++) {
     // // Setting the marker radius 
-    // magMarkers.push(
-    //   L.circle(earthquakeData.properties.mag, {
-    //     stroke: false,
-    //     fillOpacity: 0.75,
-    //     color: "white",
-    //     fillColor: "white",
-    //     radius: markerSize(earthquakeData.properties.mag)
-    //   })
+    //     magMarkers.push(
+    //     L.circle(earthquakeData.properties.mag, {
+    //         stroke: false,
+    //         fillOpacity: 0.75,
+    //         color: "white",
+    //         fillColor: "white",
+    //         radius: markerSize(earthquakeData.properties.mag)
+    //     })
     // );
     
     // Define a function we want to run once for each feature in the features array
@@ -88,6 +88,6 @@ function createMap(earthquakes) {
     var myMap = L.map("map", {
         center: [38.63, -112.12],
         zoom: 5,
-        layers: [satemap, earthquakes]
+        layers: [graymap, earthquakes]
     });
 };
