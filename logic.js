@@ -114,19 +114,19 @@ function createMap(earthquakes) {
     // Create legend
     var legend = L.control({ position: 'bottomright' });
 
-    legend.onAdd = function (map) {
+    legend.onAdd = function (mymap) {
 
         var div = L.DomUtil.create('div', 'info legend'),
             magnitude = [0, 1, 2, 3, 4, 5],
             labels = [];
 
-        div.innerHTML += "<h4 style='margin:5px'>Magnitude</h4><hr>"
+        div.innerHTML += "<h3 style='margin:5px'>Magnitude</h3><hr>"
 
         for (var i = 0; i < magnitude.length; i++) {
             div.innerHTML +=
-                '<i style="background: ' + color(magnitude[i + 1]) + '"></i> ' +
+                '<i class="legend" style="background: ' + color(magnitude[i] + 1) + '">&nbsp;&nbsp;&nbsp;&nbsp;</i> ' +
                 magnitude[i] + (magnitude[i + 1] ? '&ndash;' + magnitude[i + 1] + '<br>' : '+');
-        }
+        };
 
         return div;
     };
